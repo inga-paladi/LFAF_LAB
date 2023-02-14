@@ -83,8 +83,7 @@ public override String generateWord()
             generatedString += prodAles.rightSide;
         }
 ```
-To find if a string word is valid, we will initialize a foreach loop, which will take each letter and will search in transitions, for the rule, according
-to the letter
+To find if a string word is valid, we will initialize a foreach loop, which will take each letter and will search in transitions, for the rule, according to the letter, if a transition is found, then we move the new state it leads to
 ```
 public override bool wordIsValid(String word)
     {
@@ -105,7 +104,14 @@ public override bool wordIsValid(String word)
     }
 ```
 ## Conclusions / Screenshots / Results
+In this laboratory work, I managed to create with the grammar valid words that respect the productions. that is more easy to generate a word 
+with a grammar, than doing it on papper, that make take time.
+From productions, I changed in transitions, to get the finite automata from regular grammar, to get all the possible states, and a final state, we have to add a new nonTerminal variable, because the production (A → d ) does not have a final state.
+![image](https://user-images.githubusercontent.com/89548044/218764040-63a463b4-99da-4f9f-8421-82b5290c6e78.png)
+Above is a schema that I have used to get the transitions.
 
+
+![output](https://user-images.githubusercontent.com/89548044/218758626-a27bd2c6-ed7a-4551-8823-8e5ff4b57351.png)
 
 ## References
 
