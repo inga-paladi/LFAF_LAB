@@ -110,12 +110,13 @@ From productions, I changed in transitions, to get the finite automata from regu
 ![image](https://user-images.githubusercontent.com/89548044/218764040-63a463b4-99da-4f9f-8421-82b5290c6e78.png)
 Above is a schema that I have used to get the transitions.
 
-
+Here is our output, were our program generated 5 words, and checked  if the following word is valid (finiteAutomaton.wordIsValid("daddS"))
 ![output](https://user-images.githubusercontent.com/89548044/218758626-a27bd2c6-ed7a-4551-8823-8e5ff4b57351.png)
 
 ## References
-
-
+https://stackoverflow.com/questions/38605404/how-to-find-value-in-array-based-conditional
+https://learn.microsoft.com/en-us/dotnet/api/system.array.find?view=net-6.0
+https://codelikeadev.com/blog/get-last-character-of-string-c-sharp#:~:text=v-,Get%20Last%20Character%20Of%20A%20String%20Using%20the%20.,last%20character%20of%20the%20string.
 
 
 
