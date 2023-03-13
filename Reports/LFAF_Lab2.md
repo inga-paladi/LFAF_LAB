@@ -8,15 +8,6 @@ V_N be the set of non-terminal symbols
 V_T be the set of terminal symbols
 P be the set of production rules
 
-Grammar by definition can have different Chomsky Types, there being 4 types labeled as 0,1,2 and 3.
-Type 0:
-Any form of string conversion.
-Type 1:
-Conditional string conversion, can't convert to empty string.
-Type 2:
-Has to have one non-terminal char in the condition string, can convert in any type of string.
-Type 3:
-Can convert in only the strings of form T,TN or T,NT, where T is in V_T and N is in V_N. 
 
 The Finite Automaton is defined as follows:
 
