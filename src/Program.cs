@@ -1,21 +1,31 @@
+﻿namespace LFAF_Lab2;
+
 using System;
 
-namespace LFAF_LAB1
+public class Lab2
 {
-    public class Lab1
+    public static void Main(String[] args)
     {
-        public static void Main(String[] args)
-        {
-            Var20Grammar grammar = new Var20Grammar();
-            
-            for (int i = 0; i < 5; i++)
-                Console.WriteLine("Word: {0}", grammar.generateWord());
+        var grammar = new Var20Grammar();
+        var finiteAutomaton = grammar.toFiniteAutomaton();
+        var grammar2 = finiteAutomaton.ToGrammar();
+        bool isEqual = grammar2.isEqual(grammar);
+        Console.WriteLine("Is equal {0}", isEqual);
 
-            var finiteAutomaton = grammar.toFiniteAutomaton();
-            if (finiteAutomaton.wordIsValid("da"))           
-                Console.WriteLine("Word dabadd is valid");
-            else
-                Console.WriteLine("Word dabadd is not valid");
-        }
+        var finiteAutomatonVar20 = new FiniteAutomatonVar20();
+        var isDeterministic = finiteAutomatonVar20.IsDeterministic();
+        Console.WriteLine("Is deterministic {0}", isDeterministic);
+        var determ = finiteAutomatonVar20.ToDeterministic();
+        isDeterministic = determ.IsDeterministic();
+        Console.WriteLine("Is deterministic {0}", isDeterministic);
+        Console.WriteLine("Deterministic FA: {0}", determ.To_String());
+
+       for (int i = 0; i < 5; i++)
+           Console.WriteLine("Word: {0}", grammar.generateWord());
+
+        if (finiteAutomaton.wordIsValid("daaa"))
+            Console.WriteLine("Word is valid");
+        else
+            Console.WriteLine("Word  is not valid");
     }
-} // namespace LFAF_LAB1
+}

@@ -1,92 +1,174 @@
-using System;
+namespace LFAF_Lab2;
 
-namespace LFAF_LAB1
-{
+using System;
 
 public abstract class Grammar
 {
-    protected char[] nonTerminalVariables;//{'a','b'} 
-    protected char[] terminalVariables;
-    protected Production[] production;
-    protected char startCharacter;
+    public List<string> nonTerminalVariables = new List<string>();
+    public List<string> terminalVariables = new List<string>();
+    public List<Production> productions = new List<Production>();
+    public string startCharacter = new string("");
 
-    public abstract String generateWord();
+    public abstract string generateWord();
     public abstract FiniteAutomaton toFiniteAutomaton();
 }
 
 public class Production
 {
-    public char leftSide;
-    public String rightSide;
+    public string leftSide = new string("");
+    public string rightSide = new string("");
+
+    public bool isEqual(Production production)
+    {
+        return this.leftSide == production.leftSide
+            && this.rightSide == production.rightSide;
+    }
 }
 
-public class Var20Grammar : Grammar
-{   
-    public Var20Grammar()
-    {
-        nonTerminalVariables = new char[] {'S', 'A', 'B', 'C'};
-        terminalVariables = new char[] {'a','b','c','d'};
-        production = new Production[] {
-            new Production{leftSide = 'S', rightSide = "dA"},
-            new Production{leftSide = 'A', rightSide = "d"},
-            new Production{leftSide = 'A', rightSide = "aB"},
-            new Production{leftSide = 'B', rightSide = "bC"},
-            new Production{leftSide = 'C', rightSide = "cA"},
-            new Production{leftSide = 'C', rightSide = "aS"}
-            };
-        startCharacter = 'S';
+public class GrammarImpl : Grammar
+{
+    public string getChomskyClassification() {
+        var isType0 = true;
+        var isType1 = true;
+        var isType2 = true;
+        var isType3 = true;
+
+        // Check if each production meets the requirements for each classification
+        foreach (var production in productions) {
+            if (production.rightSide.Length == 0) {
+                // Production has empty string on right side (Type 3)
+                isType0 = false;
+                isType1 = false;
+            } else if (production.rightSide.Length == 1) {
+                if (isTerminal(production.rightSide[0].ToString() )) {
+                    // Production has terminal symbol on right side (Type 3)
+                    isType0 = false;
+                    isType1 = false;
+                } else {
+                    // Production has non-terminal symbol on right side (Type 2)
+                    isType0 = false;
+                }
+            } else if (production.rightSide.Length == 2) {
+                if (!isTerminal(production.rightSide[0].ToString()) && !isTerminal(production.rightSide[1].ToString())) {
+                    // Production has two non-terminal symbols on right side (Type 0)
+                    isType1 = false;
+                    isType3 = false;
+                } else {
+                    // Production has at least one terminal symbol on right side (Type 2)
+                    isType0 = false;
+                }
+            } else {
+                // Production has more than two symbols on right side (Type 0)
+                isType1 = false;
+                isType3 = false;
+            }
+        }
+
+        // Determine Chomsky classification
+        if (isType0) {
+            return "Type 0 (Unrestricted grammar)";
+        } else if (isType1) {
+            return "Type 1 (Context-sensitive grammar)";
+        } else if (isType2) {
+            return "Type 2 (Context-free grammar)";
+        } else if (isType3) {
+            return "Type 3 (Regular grammar)";
+        } else {
+            return "Unknown classification";
+        }
     }
 
-    public override String generateWord()
+    private bool isTerminal(string c) {
+        foreach (var terminalVar in terminalVariables)
+            if (terminalVar == c) return true;
+        
+        return false;
+    }
+
+    public override string generateWord()
     {
-        String generatedString = "";
-        generatedString += startCharacter;
+        var generatedString = startCharacter;
         while(true)
         {
-            char lastCharacter = generatedString[generatedString.Length-1];
+            var lastCharacter = generatedString.Last();
             // Console.WriteLine("the last char is {0}",lastCharacter);
-            bool isTerminal = Array.Exists(terminalVariables, element => element == lastCharacter  );
-            if (isTerminal) break;
-            var nonTermProd = production.Where(val => val.leftSide == lastCharacter);
-            Random random = new Random();
-            int randomNr = random.Next(0, nonTermProd.Count());
-            Production prodAles = nonTermProd.ElementAt(randomNr);
+            if (terminalVariables.Exists(element => element == lastCharacter.ToString()))
+                break;
+            var nonTermProd = productions.Where(val => val.leftSide == lastCharacter.ToString());
+            var random = new Random();
+            var randomNr = random.Next(0, nonTermProd.Count());
+            var prodAles = nonTermProd.ElementAt(randomNr);
+            // Remove the last one and..
             generatedString = generatedString.Remove(generatedString.Length-1, 1);
+            // .. replace with the right side of production. ex A -> aB
             generatedString += prodAles.rightSide;
         }
 
         return generatedString;
     }
 
-    public override FiniteAutomaton toFiniteAutomaton()
-    {   
-        char finalState = 'F';
+    public override FiniteAutomatonImpl toFiniteAutomaton()
+    {
+        var finalState = "F";
 
-        List<char> possibleStates = new List<char>{finalState};
-        foreach (char state in nonTerminalVariables)
+        var possibleStates = new List<String>{finalState};
+        foreach (var state in nonTerminalVariables)
             possibleStates.Add(state);
-        
-        List<Transition> transitions = new List<Transition>();
-        foreach (Production product in production)
+
+        var transitions = new List<Transition>();
+        foreach (var product in productions)
         {
             transitions.Add(
                 new Transition{
                     currentState = product.leftSide,
-                    transitionLabel = product.rightSide[0],
+                    transitionLabel = product.rightSide[0].ToString(),
                     nextState = product.rightSide.Length == 1 ?
                         finalState
-                        : product.rightSide[1]}
+                        : product.rightSide[1].ToString()}
             );
         }
 
-        Var20FiniteAutomaton var20fa = new Var20FiniteAutomaton();
-        var20fa.possibleStates = possibleStates.ToArray();
+        var var20fa = new FiniteAutomatonImpl();
+        var20fa.possibleStates = possibleStates;
         var20fa.alphabet = terminalVariables;
-        var20fa.transitions = transitions.ToArray();        
-        var20fa.initialState = startCharacter;
-        var20fa.finalStates = new char[] {finalState};
+        var20fa.transitions = transitions;
+        var20fa.initialState = startCharacter.ToString();
+        var20fa.finalStates = new List<string>{finalState};
         return var20fa;
     }
-} // class Var20Grammar
 
-} // namespace LFAF_LAB1
+    public bool isEqual(GrammarImpl grammar)
+    {
+        if (!this.nonTerminalVariables.SequenceEqual(grammar.nonTerminalVariables))
+            return false;
+        if (!this.terminalVariables.SequenceEqual(grammar.terminalVariables))
+            return false;
+        if (this.productions.Count != grammar.productions.Count)
+            return false;
+        for (var i = 0; i < this.productions.Count; i++)
+            if (!this.productions[i].isEqual(grammar.productions[i]))
+                return false;
+        if (this.startCharacter != grammar.startCharacter)
+            return false;
+
+        return true;
+    }
+} // class GrammarImpl
+
+public class Var20Grammar : GrammarImpl
+{
+    public Var20Grammar()
+    {
+        nonTerminalVariables = new List<string>{"S", "A", "B", "C"};
+        terminalVariables = new List<string>{"a","b","c","d"};
+        productions = new List<Production>{
+            new Production{leftSide = "S", rightSide = "dA"},
+            new Production{leftSide = "A", rightSide = "d"},
+            new Production{leftSide = "A", rightSide = "aB"},
+            new Production{leftSide = "B", rightSide = "bC"},
+            new Production{leftSide = "C", rightSide = "cA"},
+            new Production{leftSide = "C", rightSide = "aS"}
+            };
+        startCharacter = "S";
+    }
+} // class Var20Grammar
