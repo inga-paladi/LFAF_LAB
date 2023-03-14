@@ -202,6 +202,7 @@ public FiniteAutomatonImpl ToDeterministic()
         return deterministic_FA;
     }
 }
+```
 For each state in the queue, the method checks if it contains any final 
 states of the NFA, and if so, adds it to the final states of the DFA.
 The method then iterates over each symbol in the alphabet of the NFA. 
@@ -220,4 +221,3 @@ current DFA state with the new state using the current symbol, and adds
 the alphabet to the DFA. This process continues until there are no
 unprocessed states left in the queue.
 
-```
