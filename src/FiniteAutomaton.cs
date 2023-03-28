@@ -1,4 +1,4 @@
-namespace LFAF_Lab2;
+namespace LFAF_LAB_3;
 
 using System;
 using System.Text;

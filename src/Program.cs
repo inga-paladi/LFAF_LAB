@@ -1,8 +1,7 @@
-﻿namespace LFAF_Lab2;
+﻿namespace LFAF_LAB_3;
 
 using System;
-
-public class Lab2
+public class LAB_3
 {
     public static void Main(String[] args)
     {
@@ -27,5 +26,16 @@ public class Lab2
             Console.WriteLine("Word is valid");
         else
             Console.WriteLine("Word  is not valid");
+        
+        //Lexer implementation---------------------------------------------------
+         var lexer = new Lexer();
+        string input = "if (variabila == 1 ){} ";
+        List<Token> tokens = lexer.Tokenize(input);
+     
+        foreach (var token in tokens)
+        {
+            Console.WriteLine("Value: {0}, type: {1}", token.Value, token.Type) ;
+        }
+
     }
 }
