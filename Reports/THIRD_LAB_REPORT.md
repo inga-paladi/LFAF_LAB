@@ -92,7 +92,7 @@ In the main class we are creating a lexer object, initializing an input string, 
 ## Conclusions / Screenshots / Results
 The input string that had to be analyzed is: if (variabila == 1 ){}
 As result we received 
-<p align="center">
-  <img src="/home/moonbye/Pictures/Screenshots/Screenshot from 2023-03-30 14-22-27.png" width="350" title="Results">
-</p>
+![image](https://user-images.githubusercontent.com/89548044/228828859-e61a4b35-1d97-4d8f-b7cc-55537bfab7bb.png)
+
+
 In this laboratory work I got a deeper understanding of what a Lexer is, how to implement it. How to deal with the arithmetic characters, and the one that are unexpected characters.
