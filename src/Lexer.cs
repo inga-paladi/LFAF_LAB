@@ -1,4 +1,4 @@
-﻿namespace LFAF_LAB_3;
+﻿namespace LFAF_LABORATORY;
 using System;
 
 public enum TokenType

@@ -1,11 +1,11 @@
-﻿namespace LFAF_LAB_3;
+﻿namespace LFAF_LABORATORY;
 
 using System;
 public class LAB_3
 {
     public static void Main(String[] args)
     {
-/*        var grammar = new Var20Grammar();
+        var grammar = new Var20Grammar();
         var finiteAutomaton = grammar.toFiniteAutomaton();
         var grammar2 = finiteAutomaton.ToGrammar();
         bool isEqual = grammar2.isEqual(grammar);
@@ -31,7 +31,6 @@ public class LAB_3
          var lexer = new Lexer();
         string input = "if (variabila == 1 ){} ";
         List<Token> tokens = lexer.Tokenize(input);
-*/
     
         // Chomsky normal form ------------------------------------------------
         ChomskyNormalForm cnf = new ChomskyNormalForm();
@@ -39,7 +38,7 @@ public class LAB_3
         cnf.EliminateEProductions();
         foreach (var production in cnf.productions)
         {
-            Console.WriteLine("'{0}' -> '{1}'", production.leftSide, production.rightSide);
+            Console.WriteLine("{0} -> {1}", production.leftSide, production.rightSide);
         }
 
         Console.WriteLine("Eliminate unit productions");
@@ -71,3 +70,5 @@ public class LAB_3
         }
     }
 }
+
+

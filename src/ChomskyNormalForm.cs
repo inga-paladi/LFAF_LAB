@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
-using NPOI.SS.Formula.Functions;
+//using NPOI.SS.Formula.Functions;
 
-namespace LFAF_LAB
+namespace LFAF_LABORATORY
 {
     class ChomskyNormalForm : GrammarImpl
     {
