@@ -5,7 +5,7 @@ public class LAB_3
 {
     public static void Main(String[] args)
     {
-        var grammar = new Var20Grammar();
+/*        var grammar = new Var20Grammar();
         var finiteAutomaton = grammar.toFiniteAutomaton();
         var grammar2 = finiteAutomaton.ToGrammar();
         bool isEqual = grammar2.isEqual(grammar);
@@ -31,11 +31,43 @@ public class LAB_3
          var lexer = new Lexer();
         string input = "if (variabila == 1 ){} ";
         List<Token> tokens = lexer.Tokenize(input);
-     
-        foreach (var token in tokens)
+*/
+    
+        // Chomsky normal form ------------------------------------------------
+        ChomskyNormalForm cnf = new ChomskyNormalForm();
+        Console.WriteLine("Eliminate epsilon productions");
+        cnf.EliminateEProductions();
+        foreach (var production in cnf.productions)
         {
-            Console.WriteLine("Value: {0}, type: {1}", token.Value, token.Type) ;
+            Console.WriteLine("'{0}' -> '{1}'", production.leftSide, production.rightSide);
         }
 
+        Console.WriteLine("Eliminate unit productions");
+        cnf.EliminateUnitProductions();
+        foreach (Production production in cnf.productions)
+        {
+            Console.WriteLine(production.leftSide + " -> " + production.rightSide);
+        }
+
+        Console.WriteLine("Eliminate inaccesible symbols");
+        cnf.EliminateInaccesibleSymbols();
+        foreach (Production production in cnf.productions)
+        {
+            Console.WriteLine(production.leftSide + " -> " + production.rightSide);
+        }
+
+        Console.WriteLine("Eliminate unproductive productions");
+        cnf.EliminateUnproductiveSymbols();
+        foreach (Production production in cnf.productions)
+        {
+            Console.WriteLine(production.leftSide + " -> " + production.rightSide);
+        }
+
+        Console.WriteLine("Convert to CNF");
+        cnf.ConvertToCNF();
+        foreach (Production production in cnf.productions)
+        {
+            Console.WriteLine(production.leftSide + " -> " + production.rightSide);
+        }
     }
 }

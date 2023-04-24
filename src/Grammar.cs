@@ -20,8 +20,29 @@ public class Production
 
     public bool isEqual(Production production)
     {
-        return this.leftSide == production.leftSide
-            && this.rightSide == production.rightSide;
+        return Equals(production);
+    }
+
+    public bool Equals(Production obj)
+    {
+        return this.leftSide == obj.leftSide
+            && this.rightSide == obj.rightSide;
+    }
+
+    override public int GetHashCode()
+    {
+        var concatenatedProd = String.Concat(this.leftSide, this.rightSide);
+        return concatenatedProd.GetHashCode();
+    }
+
+    public static bool operator==(Production lhs, Production rhs)
+    {
+        return lhs.Equals(rhs); 
+    }
+
+    public static bool operator!=(Production lhs, Production rhs)
+    {
+        return !lhs.Equals(rhs);
     }
 }
 
