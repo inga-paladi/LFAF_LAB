@@ -1,5 +1,6 @@
 ﻿namespace LFAF_LABORATORY;
 
+using LFAF_LABORATORY.Parser;
 using System;
 public class LAB_3
 {
@@ -28,9 +29,17 @@ public class LAB_3
             Console.WriteLine("Word  is not valid");
         
         //Lexer implementation---------------------------------------------------
-         var lexer = new Lexer();
-        string input = "if (variabila == 1 ){} ";
-        List<Token> tokens = lexer.Tokenize(input);
+        string input = "if (variabila == 1 ){}";
+        List<Token> tokens;
+        try
+        {
+            tokens = Lexer.Tokenize(input);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            return;
+        }
     
         // Chomsky normal form ------------------------------------------------
         ChomskyNormalForm cnf = new ChomskyNormalForm();
@@ -67,6 +76,18 @@ public class LAB_3
         foreach (Production production in cnf.productions)
         {
             Console.WriteLine(production.leftSide + " -> " + production.rightSide);
+        }
+
+        //Parser implementation---------------------------------------------------
+        var parser1 = new Parser.Parser();
+        try
+        {
+            parser1.Init(tokens);
+            Console.WriteLine(parser1.Parse());
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
         }
     }
 }

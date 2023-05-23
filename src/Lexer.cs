@@ -1,5 +1,6 @@
 ﻿namespace LFAF_LABORATORY;
 using System;
+using System.Text.RegularExpressions;
 
 public enum TokenType
 {
@@ -28,85 +29,54 @@ public class Token
 
 public class Lexer
 {
-    public List<Token> Tokenize(string input)
+    static readonly string startOfLineRegex = @"^";
+
+    static readonly public Dictionary<TokenType, string> tokenTypeRegex = new()
+    {
+        { TokenType.OpenBracket, @"\{" },
+        { TokenType.CloseBracket, @"\}" },
+        { TokenType.OpenParenthesis, @"\("},
+        { TokenType.CloseParenthesis, @"\)"},
+        { TokenType.IfKeyword, "if"},
+        { TokenType.EqualOperator, @"=="},
+        { TokenType.NotEqualOperator, @"\!="},
+        { TokenType.Number, @"\d+"},
+        { TokenType.Symbol, @"[a-zA-Z_-][a-zA-Z_\d-]+"}
+    };
+
+    static public List<Token> Tokenize(string input)
     {
         var tokens = new List<Token>();
-        var pos = 0;
-        while (pos < input.Length)
+
+        while (!string.IsNullOrEmpty(input))
         {
-            if (char.IsWhiteSpace(input[pos]))
+            if (input[0] == ' ')
             {
-                // Skip whitespace
-                pos++;
+                input = input[1..];
+                continue;
             }
-            else if (input[pos] == '(')
+
+            bool matchFound = false;
+
+            foreach (var tokenRegexPair in tokenTypeRegex)
             {
-                tokens.Add(new Token(TokenType.OpenParenthesis, "("));
-                pos++;
-            }
-            else if (input[pos] == ')')
-            {
-                tokens.Add(new Token(TokenType.CloseParenthesis, ")"));
-                pos++;
-            }
-            else if (input[pos] == '{')
-            {
-                tokens.Add(new Token(TokenType.OpenBracket, "{"));
-                pos++;
-            }
-            else if (input[pos] == '}')
-            {
-                tokens.Add(new Token(TokenType.CloseBracket, "}"));
-                pos++;
-            }
-            else if (input[pos] == '=' && pos + 1 < input.Length && input[pos + 1] == '=')
-            {
-                tokens.Add(new Token(TokenType.EqualOperator, "=="));
-                pos += 2;
-            }
-            else if (input[pos] == '!' && pos + 1 < input.Length && input[pos + 1] == '=')
-            {
-                tokens.Add(new Token(TokenType.NotEqualOperator, "!="));
-                pos += 2;
-            }
-            else if (char.IsDigit(input[pos]))
-            {
-                // Parse number
-                var start = pos;
-                while (pos < input.Length && char.IsDigit(input[pos]))
+                var regex = new Regex(startOfLineRegex + tokenRegexPair.Value);
+                var match = regex.Match(input);
+                if (match.Success)
                 {
-                    pos++;
-                }
-                var length = pos - start;
-                var value = input.Substring(start, length);
-                tokens.Add(new Token(TokenType.Number, value));
-            }
-            else if (char.IsLetter(input[pos]))
-            {
-                // Parse keyword or symbol
-                var start = pos;
-                while (pos < input.Length && (char.IsLetterOrDigit(input[pos]) || input[pos] == '_'))
-                {
-                    pos++;
-                }
-                var length = pos - start;
-                var value = input.Substring(start, length);
-                if (value == "if")
-                {
-                    tokens.Add(new Token(TokenType.IfKeyword, "if"));
-                }
-                else
-                {
-                    tokens.Add(new Token(TokenType.Symbol, value));
+                    matchFound = true;
+                    tokens.Add(new Token(tokenRegexPair.Key, match.Value));
+                    input = input[match.Length..];
+                    break;
                 }
             }
-            else
+
+            if (!matchFound)
             {
-                // Unexpected character
-                throw new ArgumentException( $"Unexpected character: {input[pos]}");
+                throw new Exception("Pattern not found at: " +  input);
             }
         }
+
         return tokens;
     }
 }
-
